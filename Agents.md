@@ -1565,6 +1565,246 @@ Antes de hacer commit, verifica:
 
 ---
 
+## 🌿 Flujo de Trabajo con Ramas
+
+Este proyecto utiliza un **Git Flow** simplificado para desarrollo y cambios. Sigue este flujo para todas las nuevas características, correcciones y mejoras.
+
+### Estructura de Ramas
+
+```
+main (producción)
+  ↑
+  └─ develop (desarrollo e integración)
+      ↑
+      ├─ feature/* (nuevas características)
+      ├─ fix/* (correcciones de bugs)
+      └─ improve/* (mejoras y refactoring)
+```
+
+### Ramas Principales
+
+| Rama | Propósito | Regla |
+|------|-----------|-------|
+| `main` | Código en producción | Solo merges desde `develop` |
+| `develop` | Integración de cambios | Recibe PRs de feature/fix/improve |
+
+### Ramas de Trabajo
+
+| Patrón | Propósito | Ejemplo |
+|--------|-----------|---------|
+| `feature/*` | Nueva característica | `feature/galeria-imagenes` |
+| `fix/*` | Corrección de bug | `fix/tema-oscuro-no-persiste` |
+| `improve/*` | Mejora o refactoring | `improve/optimizar-componentes` |
+
+### Proceso Paso a Paso
+
+#### 1. **Crear una Rama para tu Trabajo**
+
+```bash
+# Asegúrate de estar en develop y actualizado
+git checkout develop
+git pull origin develop
+
+# Crea tu rama de trabajo desde develop
+git checkout -b feature/nombre-descriptivo
+
+# O directamente:
+git checkout -b feature/nombre-descriptivo origin/develop
+```
+
+**Convención de nombres:**
+- Usa kebab-case: `feature/agregar-busqueda`
+- Descriptivo y corto: ¿Qué hace? → nombre
+- ❌ MAL: `feature/cambios`, `feature/fix1`
+- ✅ BIEN: `feature/filtro-imagenes`, `fix/error-carga`
+
+---
+
+#### 2. **Trabajar en tu Rama**
+
+```bash
+# Desarrolla normalmente
+git add archivo.vue
+git commit -m "Agregar componente Filtro"
+
+# Commit messages en español, explicativos
+# ✅ BIEN: "Añadir filtro por tamaño en galería"
+# ❌ MAL: "cambios", "fix"
+```
+
+**Checklist antes de commitear:**
+- [ ] TODO en español ✓
+- [ ] Componentes < 150 líneas
+- [ ] Props tipados
+- [ ] Sin console.log
+- [ ] Estilos scoped
+- [ ] KISS primero, SOLID después
+- [ ] `npm run lint` pasa
+
+---
+
+#### 3. **Push a Remote y Crear PR**
+
+```bash
+# Push tu rama a origin
+git push -u origin feature/nombre-descriptivo
+
+# Crear PR usando GitHub CLI
+gh pr create --base develop --title "Descripción breve" \
+  --body "
+## Resumen
+Qué cambios haces
+
+## Verificación
+- [ ] npm run lint sin errores
+- [ ] npm run build exitoso
+- [ ] Cambios probados localmente
+
+## Type
+- [ ] Feature
+- [ ] Fix
+- [ ] Improvement
+"
+```
+
+**Estructura de PR:**
+- Título: claro y descriptivo (< 70 caracteres)
+- Descripción: qué, por qué, cómo
+- Checklist: verificación manual
+
+---
+
+#### 4. **Revisión y Aprobación**
+
+- La PR será revisada según directrices de Agents.md
+- Integra feedback
+- Asegura que CI/CD pase (si está configurado)
+
+---
+
+#### 5. **Merge a develop**
+
+```bash
+# Una vez aprobada, merge desde GitHub (opción "Squash and merge" recomendado)
+# O mediante CLI:
+gh pr merge <número> --squash --body "Commit message"
+```
+
+---
+
+#### 6. **Limpieza de Rama Local**
+
+```bash
+# Elimina tu rama local
+git branch -D feature/nombre-descriptivo
+
+# Actualiza develop local
+git checkout develop
+git pull origin develop
+```
+
+---
+
+### Flujo Completo para Producción
+
+```bash
+# 1. Desarrollo en feature (descrito arriba)
+
+# 2. Merge feature → develop (vía PR)
+
+# 3. Cuando develop está listo para producción:
+git checkout main
+git pull origin main
+git merge develop
+git push origin main
+
+# 4. Crear release tag (opcional):
+git tag v0.2.0
+git push origin v0.2.0
+
+# 5. Después de merge a main, sincronizar develop:
+git checkout develop
+git pull origin develop
+```
+
+---
+
+### Ejemplo Real: Agregar Nueva Característica
+
+```bash
+# 1. Crear rama
+git checkout develop
+git pull origin develop
+git checkout -b feature/agregar-descarga-imagenes
+
+# 2. Crear componentes
+# (Crear DescargadorImagenes.vue, useDescargas.ts, etc)
+# Seguir patrones de Agents.md
+
+# 3. Commits locales
+git add src/components/
+git commit -m "Agregar componente DescargadorImagenes"
+git add src/composables/
+git commit -m "Agregar lógica de descargas con useDescargas"
+
+# 4. Push y PR
+git push -u origin feature/agregar-descarga-imagenes
+gh pr create --base develop \
+  --title "Agregar descarga de imágenes" \
+  --body "Permite descargar imágenes individuales o en lotes"
+
+# 5. (Usuario revisa y aprueba)
+
+# 6. Merge (desde GitHub)
+
+# 7. Actualizar local
+git checkout develop
+git pull origin develop
+git branch -D feature/agregar-descarga-imagenes
+```
+
+---
+
+### Reglas de Oro
+
+✅ **SIEMPRE:**
+- Crear rama desde `develop`
+- PR para cualquier cambio (incluso pequeños)
+- Hacer commits descriptivos en español
+- Revisar código antes de mergear
+- Mantener ramas limpias y actualizadas
+
+❌ **NUNCA:**
+- Commitear directamente a `main` o `develop`
+- Push force (`git push --force`)
+- Ignorar linting o errores de build
+- Mezclar múltiples características en una PR
+- Dejar ramas abandonadas sin eliminar
+
+---
+
+### troubleshooting
+
+**¿Mi rama está desactualizada?**
+```bash
+git fetch origin
+git rebase origin/develop
+```
+
+**¿Cometí error en el commit?**
+```bash
+# Cambiar mensaje: git commit --amend
+# Deshacer commit: git reset HEAD~1
+```
+
+**¿Necesito mergear develop en mi rama?**
+```bash
+git fetch origin
+git merge origin/develop
+```
+
+---
+
 ## 📞 Dudas o Preguntas
 
 Si algo no está claro:
@@ -1576,4 +1816,4 @@ Si algo no está claro:
 ---
 
 **Última actualización:** 2026-04-25
-**Versión:** 1.0
+**Versión:** 1.1 (Incluye flujo de ramas)

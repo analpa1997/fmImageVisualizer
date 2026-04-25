@@ -1,0 +1,91 @@
+/**
+ * global.css - Estilos globales de la aplicación
+ * Reset, base styles, y estilos aplicados a toda la app
+ */
+
+@import './variables.css';
+
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--fuente-tamanio-base);
+}
+
+body {
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  transition: var(--transicion);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Contenedor principal */
+#app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Elementos comunes */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: var(--espaciado-md);
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: var(--espaciado-md);
+}
+
+a {
+  color: var(--color-primario);
+  text-decoration: none;
+  transition: var(--transicion);
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Scrollbar personalizada para tema oscuro */
+[data-tema="oscuro"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-tema="oscuro"] ::-webkit-scrollbar-track {
+  background: var(--color-fondo-secundario);
+}
+
+[data-tema="oscuro"] ::-webkit-scrollbar-thumb {
+  background: var(--color-primario);
+  border-radius: 4px;
+}
+
+[data-tema="oscuro"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secundario);
+}
