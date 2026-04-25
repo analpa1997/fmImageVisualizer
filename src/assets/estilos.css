@@ -1,0 +1,53 @@
+/* Estilos globales de la aplicación FM Image Visualizer */
+
+/* Variables de color para el modo claro (por defecto) */
+:root {
+  --color-fondo: #f5f5f5;
+  --color-texto: #1a1a2e;
+  --color-tarjeta: #ffffff;
+  --color-borde: #dde1e7;
+  --color-primario: #4a90d9;
+  --color-primario-hover: #357abd;
+  --color-sombra: rgba(0, 0, 0, 0.1);
+  --transicion: 0.3s ease;
+}
+
+/* Variables de color para el modo oscuro */
+.modo-oscuro {
+  --color-fondo: #121212;
+  --color-texto: #e8eaf0;
+  --color-tarjeta: #1e1e2e;
+  --color-borde: #3a3a4a;
+  --color-primario: #7cb9e8;
+  --color-primario-hover: #9ecfff;
+  --color-sombra: rgba(0, 0, 0, 0.4);
+}
+
+/* Reinicio de estilos base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilos del cuerpo del documento */
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  transition:
+    background-color var(--transicion),
+    color var(--transicion);
+  min-height: 100vh;
+}
+
+/* Contenedor principal de la aplicación */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
